@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Файловый загрузчик</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --card-bg: #1a1d26;
+      --accent: #4f46e5;
+      --accent-hover: #4338ca;
+      --text: #f3f4f6;
+      --text-sub: #9ca3af;
+      --border: #2d3343;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .category-title {
+      font-size: 1.3rem;
+      margin: 25px 0 15px 0;
+      color: #818cf8;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 6px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+
+    .card h3 {
+      margin: 0 0 8px 0;
+      font-size: 1.1rem;
+    }
+
+    .card p {
+      margin: 0 0 15px 0;
+      font-size: 0.9rem;
+      color: var(--text-sub);
+    }
+
+    button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Модальные окна */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 24px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 360px;
+      text-align: center;
+    }
+
+    .modal h4 {
+      margin-top: 0;
+    }
+
+    .modal input {
+      width: calc(100% - 24px);
+      padding: 10px;
+      margin: 15px 0;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #11141c;
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .btn-secondary {
+      background: #374151;
+    }
+
+    .btn-secondary:hover {
+      background: #4b5563;
+    }
+
+    /* Пасхалка на весь экран */
+    .easter-egg-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      cursor: pointer;
+    }
+
+    .easter-egg-overlay.active {
+      display: flex;
+    }
+
+    .easter-egg-text {
+      font-size: clamp(2rem, 8vw, 5rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #e11d48;
+      text-align: center;
+      text-shadow: 0 0 20px rgba(225, 29, 72, 0.6);
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Центр загрузок</h1>
+
+  <!-- 1. АПКШНИКИ -->
+  <div class="category-title">1. АПКшники</div>
+  <div class="grid">
+    <div class="card">
+      <div>
+        <h3>ByeByeDPI (VPN)</h3>
+        <p>Утилита для обхода ограничений и ускорения YouTube.</p>
+      </div>
+      <button onclick="requestPassword('ByeByeDPI.apk')">Скачать</button>
+    </div>
+
+    <div class="card">
+      <div>
+        <h3>KLWP Pro</h3>
+        <p>Приложение для создания и работы с живыми обоями.</p>
+      </div>
+      <button onclick="handleKlwpDownload()">Скачать</button>
+    </div>
+
+    <div class="card">
+      <div>
+        <h3>KWGT Kustom Widget</h3>
+        <p>Приложение для создания кастомных виджетов.</p>
+      </div>
+      <button onclick="requestPassword('KWGT.apk')">Скачать</button>
+    </div>
+  </div>
+
+  <!-- 2. ПЛАГИНЫ ДЛЯ ДОЛЬФИ -->
+  <div class="category-title">2. Плагины для Дольфи</div>
+  <div class="grid">
+    <div class="card">
+      <div>
+        <h3>Dolphin Plugin Pack</h3>
+        <p>Пакет базовых дополнений и расширений.</p>
+      </div>
+      <button onclick="requestPassword('dolphin_plugins.zip')">Скачать</button>
+    </div>
+  </div>
+
+  <!-- 3. ОБОИ КЛВП -->
+  <div class="category-title">3. Обои КЛВП</div>
+  <div class="grid">
+    <div class="card">
+      <div>
+        <h3>Пресет: Cyber City</h3>
+        <p>Анимированные живые обои для KLWP.</p>
+      </div>
+      <button onclick="requestPassword('cyber_city.klwp')">Скачать</button>
+    </div>
+
+    <!-- Карточка с пасхалкой при нажатии -->
+    <div class="card" style="border-color: #e11d48; cursor: pointer;" onclick="triggerEasterEgg()">
+      <div>
+        <h3>Grief ⚠️</h3>
+        <p>Нажми для вызова режима прохождения.</p>
+      </div>
+      <button onclick="event.stopPropagation(); requestPassword('grief_theme.klwp')">Скачать</button>
+    </div>
+  </div>
+
+  <!-- 4. ВИДЖЕТЫ КВГТ -->
+  <div class="category-title">4. Виджеты КВГТ</div>
+  <div class="grid">
+    <div class="card">
+      <div>
+        <h3>Glass Clock Widget</h3>
+        <p>Виджет минималистичных часов для экрана.</p>
+      </div>
+      <button onclick="requestPassword('glass_clock.kwgt')">Скачать</button>
+    </div>
+    <div class="card">
+      <div>
+        <h3>System Status Bar</h3>
+        <p>Панель мониторинга памяти, сети и батареи.</p>
+      </div>
+      <button onclick="requestPassword('system_bar.kwgt')">Скачать</button>
+    </div>
+  </div>
+
+  <!-- Диалог для KLWP: предложение скачать обои -->
+  <div class="modal-overlay" id="klwpPromptModal">
+    <div class="modal">
+      <h4>Живые обои</h4>
+      <p>Хотите ли вы скачать обои дополнительно?</p>
+      <div class="modal-actions">
+        <button onclick="answerKlwpPrompt(true)">Да</button>
+        <button class="btn-secondary" onclick="answerKlwpPrompt(false)">Нет</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модальное окно ввода пароля -->
+  <div class="modal-overlay" id="passwordModal">
+    <div class="modal">
+      <h4>Введите пароль</h4>
+      <p id="targetFileName" style="font-size: 0.85rem; color: var(--text-sub);"></p>
+      <input type="password" id="passwordInput" placeholder="Пароль доступа...">
+      <div class="modal-actions">
+        <button onclick="verifyPassword()">Подтвердить</button>
+        <button class="btn-secondary" onclick="closePasswordModal()">Отмена</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Полноэкранная пасхалка -->
+  <div class="easter-egg-overlay" id="easterEgg" onclick="closeEasterEgg()">
+    <div class="easter-egg-text">Bafnu I proidu</div>
+  </div>
+
+  <script>
+    // Пароль для скачивания (можно заменить на свой)
+    const ACCESS_PASSWORD = "123";
+
+    let pendingDownload = "";
+
+    // Обработка клика на скачивание обычного файла
+    function requestPassword(fileName) {
+      pendingDownload = fileName;
+      document.getElementById("targetFileName").innerText = "Файл: " + fileName;
+      document.getElementById("passwordInput").value = "";
+      document.getElementById("passwordModal").classList.add("active");
+    }
+
+    function closePasswordModal() {
+      document.getElementById("passwordModal").classList.remove("active");
+      pendingDownload = "";
+    }
+
+    // Проверка пароля
+    function verifyPassword() {
+      const entered = document.getElementById("passwordInput").value;
+      if (entered === ACCESS_PASSWORD) {
+        alert("Пароль верный! Скачивание: " + pendingDownload);
+        closePasswordModal();
+      } else {
+        alert("Неверный пароль доступа!");
+      }
+    }
+
+    // Специфика для KLWP
+    function handleKlwpDownload() {
+      document.getElementById("klwpPromptModal").classList.add("active");
+    }
+
+    function answerKlwpPrompt(wantWallpapers) {
+      document.getElementById("klwpPromptModal").classList.remove("active");
+      if (wantWallpapers) {
+        requestPassword("KLWP_Pro_Bundle_With_Wallpapers.zip");
+      } else {
+        alert("Скачивание обоев отменено.");
+      }
+    }
+
+    // Пасхалка Grief
+    function triggerEasterEgg() {
+      document.getElementById("easterEgg").classList.add("active");
+    }
+
+    function closeEasterEgg() {
+      document.getElementById("easterEgg").classList.remove("active");
+    }
+  </script>
+</body>
+</html>
